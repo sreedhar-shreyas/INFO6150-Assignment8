@@ -1,0 +1,37 @@
+// Create User API endpoint
+app.post('/user/create', (req, res) => {
+  // Implement user creation and validation logic here
+});
+
+// Edit User API endpoint
+app.put('/user/edit', (req, res) => {
+  // Implement user edit and validation logic here
+});
+
+// Delete User API endpoint
+app.delete('/user/delete', (req, res) => {
+  // Implement user deletion logic here
+});
+
+// Get All Users API endpoint
+app.get('/user/getAll', (req, res) => {
+  // Implement getting all users' data logic here
+});
+
+// Start the server
+
+
+const connectionString = `mongodb://localhost:27017/as-9-info610`;
+mongoose.connect(connectionString)
+    .then(()=>{
+        console.log("db connection successfully");
+    })
+    .catch(()=>{
+        console.log("db connection failed");
+    })
+
+app.use("/user",usersRouter);
+app.use(middleware.undefinedRouteHandler);
+app.use(middleware.errorMiddleware);
+
+module.exports = app;
