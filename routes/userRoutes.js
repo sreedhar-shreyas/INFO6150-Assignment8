@@ -24,15 +24,17 @@ router.post('/user/create', async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, salt);
       const user = new User({ fullName, email, password: hashedPassword, salt });
       await user.save();
-      res.send('User created successfully');
+      res.send(`User ${user.email} created successfully`);
     } catch (error) {
       console.error('Error creating user:', error);
-      res.status(500).send('Internal Server Error - Error creating user');
+      res.status(500).send('Internal Server Error - Error creating user - Check Email Id, User might already exist');
     }
   });
 router.put('/user/edit', async (req, res) => {
     const { email, fullName, password } = req.body;
-  
+    if (!fullName && !password) {
+      return res.status(400).send('Please enter data to update!');
+    }
   
     if (!email || typeof email !== 'string') {
       return res.status(400).send('Invalid email ');
@@ -67,10 +69,10 @@ router.put('/user/edit', async (req, res) => {
   
       await user.save();
   
-      res.send('User details updated successfully');
+      res.send(`User ${user.fullName} details updated successfully`);
     } catch (error) {
       console.error('Error updating user details:', error);
-      res.status(500).send('Eroor in updating user details');
+      res.status(500).send('Error in updating user details');
     }
   });
   

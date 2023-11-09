@@ -8,7 +8,7 @@ const routes = require('./routes/userRoutes.js');
 mongoose.connect('mongodb://localhost:27017/as-9-info610', { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-
+app.get('/', (req, res)=>{res.send('Hello from the homepage');});
 
 
 app.use(express.json());
@@ -27,5 +27,6 @@ app.use(routes);
 
 
 app.listen(port, () => {
-  console.log(`Server is definately running on port ${port}`);
+  const localurl = `http://localhost:${port}`;
+  console.log(`Server is definately running on port ${localurl}`);
 });
