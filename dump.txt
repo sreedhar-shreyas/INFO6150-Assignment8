@@ -35,3 +35,91 @@ app.use(middleware.undefinedRouteHandler);
 app.use(middleware.errorMiddleware);
 
 module.exports = app;
+
+
+
+----
+
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+const app = express();
+const PORT = 3000;
+
+
+const usersRoutes = require('./routes/users.js');
+
+mongoose.connect('mongodb://localhost:27017/as-9-info610', { useNewUrlParser: true, useUnifiedTopology: true });
+
+
+
+
+app.use(express.json());
+
+app.get('/', (req, res)=>{res.send('Hello from def homepage');});
+
+// app.post('/user/create', async (req, res) => {
+//   const { fullName, email, password } = req.body;
+
+//   // Add validation for email and password
+//   if (!email.match(/^[a-zA-Z0-9._-]+@northeastern\.edu$/)) {
+//     return res.status(400).send('Invalid email format');
+//   }
+
+//   if (password.length < 8) {
+//     return res.status(400).send('Password must be at least 8 characters long');
+//   }
+
+//   try {
+//     console.log('Creating user:', { fullName, email, password });
+//     const salt = await bcrypt.genSalt(10);
+//     const hashedPassword = await bcrypt.hash(password, salt);
+//     const user = new User({ fullName, email, password: hashedPassword, salt });
+//     await user.save();
+//     res.send('User created successfully');
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
+
+
+app.use(bodyParser.json());
+
+// app.use('/users',usersRoutes);
+// API Endpoint to create a user
+app.post('/user/create', async (req, res) => {
+  const { fullName, email, password } = req.body;
+
+  // Validate request body
+  if (!fullName || !email || !password) {
+    return res.status(400).send('Missing required fields in the request body');
+  }
+
+  // Add validation for email and password
+  if (!email || typeof email !== 'string' || !email.match(/^[a-zA-Z0-9._-]+@northeastern\.edu$/)) {
+    return res.status(400).send('Invalid email format');
+  }
+
+  if (password.length < 8) {
+    return res.status(400).send('Password must be at least 8 characters long');
+  }
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const user = new User({ fullName, email, password: hashedPassword, salt });
+    await user.save();
+    res.send('User created successfully');
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).send('Internal Sersver Error');
+  }
+});
+
+
+
+
+app.listen(PORT, () => console.log(`Server is def running on: http://localhost:${PORT}`));
+
+
