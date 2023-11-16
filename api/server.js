@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const app = express();
 const port = 3000;
-const routes = require('./routes/userRoutes.js');
+const routes = require('./routes/Routes.js');
 
 mongoose.connect('mongodb://localhost:27017/as-9-info610', { useNewUrlParser: true, useUnifiedTopology: true });
 
